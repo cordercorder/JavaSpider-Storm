@@ -36,12 +36,12 @@ public class HandleBolt extends BaseRichBolt {
         for(int i=0;i<arr_lan.length;i++){
             if(isv.get(arr_id[i])==null){
                 isv.put(arr_id[i],true);
-                collector.emit(new Values(arr_lan[i]));
+                collector.emit(new Values(arr_id[i],arr_lan[i]));
             }
         }
     }
 
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-        outputFieldsDeclarer.declare(new Fields("word"));
+        outputFieldsDeclarer.declare(new Fields("id","word"));
     }
 }

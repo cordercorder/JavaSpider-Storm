@@ -12,6 +12,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -85,6 +87,7 @@ public class CreateDataSpout extends BaseRichSpout {
         Matcher matcher=pattern.matcher(source);
 
         String tmp,ans=new String();
+        List<String> rev=new ArrayList<String>();
         int L,R;
 
         int sum=0;
@@ -100,11 +103,13 @@ public class CreateDataSpout extends BaseRichSpout {
                 R--;
             }
             if(L<R+1){
-                ans+=tmp.substring(L,R+1)+"$";
+                rev.add(tmp.substring(L,R+1));
                 sum++;
             }
         }
-
+        for(int i=rev.size()-1;i>=0;i--){
+            ans+=rev.get(i)+"$";
+        }
         System.out.println(sum);
         return ans;
     }

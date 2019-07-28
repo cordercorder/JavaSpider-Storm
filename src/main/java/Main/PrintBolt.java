@@ -5,11 +5,7 @@ import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Tuple;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.util.Map;
 
 /**
@@ -19,13 +15,12 @@ import java.util.Map;
  */
 public class PrintBolt extends BaseRichBolt {
 
-    FileWriter fileWriter;
+    WriteData Writer;
 
     public void prepare(Map<String, Object> map, TopologyContext topologyContext, OutputCollector outputCollector) {
         try {
-            File file=new File("/home/cordercorder/java/data.in");
 
-            fileWriter=new FileWriter(file,true);
+            Writer=new WriteData("root","123456","jdbc:mysql://localhost:3306/storm");
         }
         catch (Exception e){
             e.printStackTrace();
@@ -38,15 +33,15 @@ public class PrintBolt extends BaseRichBolt {
 
     public void execute(Tuple tuple) {
         String word=tuple.getStringByField("word");
-        Integer count=tuple.getIntegerByField("count");
+        long count=tuple.getLongByField("count");
+        long id=tuple.getLongByField("id");
         try {
-            fileWriter.write(word+" "+count+"\n");
-            fileWriter.flush();
+            Writer.InsertData(id,word,count);
         }
         catch (Exception e){
             e.printStackTrace();
         }
-        System.out.println(word+"------>"+count);
+        System.out.println(id+"------>"+word+"------>"+count);
     }
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
 

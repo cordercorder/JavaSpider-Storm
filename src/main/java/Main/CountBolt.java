@@ -20,7 +20,7 @@ public class CountBolt extends BaseRichBolt {
 
     private OutputCollector collector;
 
-    private Map<String,Integer> cnt=new HashMap<String,Integer>();
+    private Map<String,Long> cnt=new HashMap<String,Long>();
 
     public void prepare(Map<String, Object> map, TopologyContext topologyContext, OutputCollector outputCollector) {
         collector=outputCollector;
@@ -28,19 +28,21 @@ public class CountBolt extends BaseRichBolt {
 
     public void execute(Tuple tuple) {
         String word=tuple.getStringByField("word");
-        int count;
+        String id_string=tuple.getStringByField("id");
+        long id=Long.parseLong(id_string);
+        long count;
         if(cnt.get(word)!=null){
-            count=cnt.get(word)+1;
+            count=cnt.get(word)+1L;
             cnt.put(word,count);
         }
         else{
-            count=1;
+            count=1L;
             cnt.put(word,count);
         }
-        collector.emit(new Values(word,count));
+        collector.emit(new Values(id,word,count));
     }
 
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-        outputFieldsDeclarer.declare(new Fields("word","count"));
+        outputFieldsDeclarer.declare(new Fields("id","word","count"));
     }
 }

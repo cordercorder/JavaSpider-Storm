@@ -20,11 +20,11 @@ public class Topology{
 
         builder.setSpout("DataSpout",new CreateDataSpout());
 
-        builder.setBolt("HandleBolt",new HandleBolt(),2).shuffleGrouping("DataSpout");
+        builder.setBolt("HandleBolt",new HandleBolt(),1).shuffleGrouping("DataSpout");
 
-        builder.setBolt("CountBolt",new CountBolt(),2).fieldsGrouping("HandleBolt",new Fields("word"));
+        builder.setBolt("CountBolt",new CountBolt(),1).fieldsGrouping("HandleBolt",new Fields("word"));
 
-        builder.setBolt("PrintBolt",new PrintBolt(),2).globalGrouping("CountBolt");
+        builder.setBolt("PrintBolt",new PrintBolt(),1).globalGrouping("CountBolt");
 
         Config config=new Config();
 
@@ -35,19 +35,7 @@ public class Topology{
             }
             else{
                 config.setNumWorkers(1);
-                try{
-                    if(args.length==0){
-                        LocalCluster cluster=new LocalCluster();
-                        cluster.submitTopology("stormTopology",config,builder.createTopology());
-                    }
-                    else{
-                        config.setNumWorkers(1);
-                        StormSubmitter.submitTopology(args[0],config,builder.createTopology());
-                    }
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
+                StormSubmitter.submitTopology(args[0],config,builder.createTopology());
                 StormSubmitter.submitTopology(args[0],config,builder.createTopology());
             }
         }
