@@ -20,7 +20,7 @@ public class PrintBolt extends BaseRichBolt {
     public void prepare(Map<String, Object> map, TopologyContext topologyContext, OutputCollector outputCollector) {
         try {
 
-            Writer=new WriteData("root","123456","jdbc:mysql://localhost:3306/storm");
+            Writer=new WriteData("root","123456","jdbc:mysql://localhost:3306/storm?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8");
         }
         catch (Exception e){
             e.printStackTrace();
